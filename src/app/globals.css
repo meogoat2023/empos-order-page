@@ -1,42 +1,83 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 245, 245, 245;
+  --bs-body-line-height: 22px;
+  --bs-border-color: #d2cddb80;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  line-height: var(--bs-body-line-height);
+  font-family: var(--font-sf);
 }
 
-* {
-  box-sizing: border-box;
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+input {
+  /* Loại bỏ border và outline mặc định */
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
   padding: 0;
   margin: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+input::placeholder {
+  color: var(--neutral-inverse-tertiary);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.text-sm-regular {
+  font-size: var(--fs-14) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-22) !important;
+}
+
+.title-sm-medium {
+  font-size: var(--fs-17) !important;
+  font-weight: var(--fw-medium) !important;
+  line-height: var(--lh-22) !important;
+}
+
+.text-sm-semibold {
+  font-size: var(--fs-13) !important;
+  font-weight: var(--fw-semibold) !important;
+  line-height: var(--lh-18) !important;
+}
+
+.text-md-regular {
+  font-size: var(--fs-15) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-20) !important;
+}
+.text-md-semibold {
+  font-size: var(--fs-15) !important;
+  font-weight: var(--fw-semibold) !important;
+  line-height: var(--lh-20) !important;
+}
+
+.text-md-caption {
+  font-size: var(--fs-12) !important;
+  font-weight: var(--fw-medium) !important;
+  line-height: var(--lh-16) !important;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: var(--line, 2);
 }

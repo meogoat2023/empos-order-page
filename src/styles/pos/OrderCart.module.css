@@ -1,0 +1,261 @@
+.container {
+  height: 100%;
+  padding: var(--padding-10) var(--padding-16) var(--padding-16);
+  max-height: 100dvh;
+  overflow-y: auto;
+}
+
+.tabHeader {
+  border-top: 3px solid var(--color-secondary);
+  padding: var(--padding-8) var(--padding-12);
+  gap: var(--gap-16);
+  justify-content: space-between;
+}
+
+.tabList {
+  gap: var(--gap-8);
+  overflow-x: auto;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
+}
+
+.tabButton {
+  min-height: 36px;
+  max-height: 36px;
+  border-color: var(--neutral-inverse-tertiary);
+  border-radius: var(--radius-8);
+}
+
+.tabActive {
+  background-color: var(--color-primary) !important;
+  color: var(--text-brand-inverse) !important;
+  border: none !important;
+}
+
+.tabActions {
+  gap: var(--gap-8);
+  max-width: 124px;
+}
+
+.toolbar {
+  height: 32px;
+  margin: var(--padding-8) 0 var(--padding-10);
+}
+
+.toolbarTableName {
+  color: var(--text-brand-primary);
+}
+
+.toolbarTableInput {
+  max-width: 203px;
+}
+
+.toolbarTableDatepicker {
+  max-width: 155px;
+}
+
+.toolbarTableInputSuffix {
+  margin-left: 0 !important;
+}
+
+.orderList {
+  flex-grow: 1;
+}
+
+.orderItem {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.itemMainRow {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  gap: 8px;
+  height: 24px;
+}
+
+.itemName {
+  min-width: 176px;
+  max-width: 176px;
+}
+
+.unitSelect {
+  max-width: 46px;
+  padding: 0 !important;
+  color: var(--neutral-secondary) !important;
+}
+
+.quantityGroup {
+  display: flex;
+  align-items: center;
+}
+
+.qtyValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 20px;
+  color: #35313c;
+  min-width: 28px;
+  padding: 0 2px;
+}
+
+.qtyBtn {
+  background-color: #fff;
+  border: 1px solid #2f99e7 !important;
+  color: #35313c;
+}
+
+.qtyBtnPlus {
+  border: none !important;
+  background-color: #2f99e7 !important;
+  color: #fff !important;
+}
+
+.priceGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.itemPrice {
+  width: 88px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #5f5a6a;
+  text-align: center;
+}
+
+.itemTotal {
+  width: 73px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #119c72;
+  text-align: center;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  cursor: pointer;
+}
+
+.toppingsNote {
+  display: flex;
+  flex-direction: column;
+}
+
+.subInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #35313c;
+}
+
+.toppingsName {
+  font-size: 12px;
+  line-height: 16px;
+  color: #35313c;
+}
+
+.note {
+  display: -webkit-box;
+  font-size: 12px;
+  line-height: 16px;
+  color: #8c8697;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footerText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.footerBtnGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerBtn {
+  border: 0 !important;
+  background-color: #cdeaff !important;
+  color: #005695 !important;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #5f5a6a;
+}
+
+.footerPromotion,
+.footerVat {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #8c8697;
+}
+
+.footerPromotion span,
+.footerVat span {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #5f5a6a;
+}
+
+.footerTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.footerTotal span:first-child {
+  color: #5f5a6a;
+}
+
+.footerTotal span:last-child {
+  color: #dd980a;
+  cursor: pointer;
+}
+
+.footerBtnPayment {
+  background-color: #1376be !important;
+  color: #f3f3f4 !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 24px !important;
+}

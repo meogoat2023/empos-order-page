@@ -1,0 +1,23 @@
+.mainSidebar {
+  min-width: var(--sidebar-width);
+}
+
+.item {
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--margin-b-lg);
+  cursor: pointer;
+  transition: all linear 0.2s;
+  width: 85px;
+  height: 80px;
+  background-color: transparent;
+}
+
+.active {
+  background-color: var(--bg-primary);
+  color: white;
+}
+
+.item:hover {
+  background-color: var(--bg-primary);
+  color: white;
+}
