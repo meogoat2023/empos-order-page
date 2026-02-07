@@ -1,14 +1,21 @@
 .topHeader {
   height: 56px;
+  flex: none;
 }
 
-.disableScroll::-webkit-scrollbar {
-  display: none;
+.subCategory {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  cursor: grab;
 }
 
 .subItem {
   width: fit-content;
   cursor: pointer;
+  pointer-events: auto;
   transition: all 0.2s ease-in-out;
   border-radius: var(--radius-md);
   white-space: nowrap;
@@ -30,4 +37,10 @@
 .subItem.inactive:hover {
   background-color: var(--bg-sematic-success-subtle);
   border-color: var(--color-primary);
+}
+
+@media (max-width: 1024px) {
+  .topHeader {
+    height: 48px;
+  }
 }

@@ -1,8 +1,12 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   height: 100%;
-  padding: var(--padding-10) var(--padding-16) var(--padding-16);
+  padding: 10px 16px 16px;
   max-height: 100dvh;
-  overflow-y: auto;
+  overflow-y: hidden;
+  position: relative;
 }
 
 .tabHeader {
@@ -15,10 +19,9 @@
 .tabList {
   gap: var(--gap-8);
   overflow-x: auto;
-}
-
-.tabList::-webkit-scrollbar {
-  display: none;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  cursor: grab;
 }
 
 .tabButton {
@@ -26,6 +29,9 @@
   max-height: 36px;
   border-color: var(--neutral-inverse-tertiary);
   border-radius: var(--radius-8);
+  cursor: pointer;
+  pointer-events: auto;
+  width: 110px;
 }
 
 .tabActive {
@@ -35,13 +41,22 @@
 }
 
 .tabActions {
-  gap: var(--gap-8);
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 8px;
   max-width: 124px;
 }
 
+.tabActions > button {
+  --ant-control-height: 36px;
+}
+
 .toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   height: 32px;
-  margin: var(--padding-8) 0 var(--padding-10);
 }
 
 .toolbarTableName {
@@ -61,20 +76,33 @@
 }
 
 .orderList {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid #d2cddb80;
+  padding: 0 8px;
+  margin: 0 -8px;
+  flex: 1;
 }
 
 .orderItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   border-bottom: 1px solid var(--color-border);
-  padding-bottom: 4px;
-  margin-bottom: 8px;
+  padding: 8px 0;
+}
+
+.orderItem:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .itemMainRow {
   display: flex;
   align-items: start;
   gap: 8px;
-  margin-bottom: 4px;
 }
 
 .itemActions {
@@ -109,7 +137,7 @@
   font-size: 15px;
   line-height: 20px;
   color: #35313c;
-  min-width: 28px;
+  width: 28px;
   padding: 0 2px;
 }
 
@@ -132,7 +160,7 @@
 }
 
 .itemPrice {
-  width: 88px;
+  width: 70px;
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
@@ -141,7 +169,7 @@
 }
 
 .itemTotal {
-  width: 73px;
+  width: 70px;
   font-size: 12px;
   line-height: 18px;
   font-weight: 500;
@@ -184,18 +212,21 @@
   color: #8c8697;
 }
 
-.footer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .footerText {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   line-height: 18px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #5f5a6a;
 }
 
 .footerBtnGroup {
@@ -210,13 +241,16 @@
   color: #005695 !important;
 }
 
-.icon {
+.footerRegularPrice button {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  color: #5f5a6a;
+  justify-content: space-between;
+  background-color: #2f99e7 !important;
+  width: 165px;
+  color: #fff !important;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
 }
 
 .footerPromotion,
@@ -252,10 +286,31 @@
   cursor: pointer;
 }
 
-.footerBtnPayment {
+.footerBtnAction {
   background-color: #1376be !important;
   color: #f3f3f4 !important;
-  font-size: 17px !important;
+  font-size: 15px !important;
   font-weight: 600 !important;
   line-height: 24px !important;
+}
+
+.footerBtnPayment {
+  background-color: #119c72 !important;
+  color: #cffff0 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 24px !important;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 6px 8px;
+  }
+  .footer {
+    width: calc(100% - 12px);
+  }
+  .itemName {
+    min-width: 150px;
+    max-width: 150px;
+  }
 }

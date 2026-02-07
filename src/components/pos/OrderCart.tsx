@@ -2,6 +2,7 @@
 
 import { useOrderContext } from '@/contexts/OrderContext';
 import { formatNumber } from '@/helpers/number';
+import { useDragScroll } from '@/hooks/useDragScroll';
 import useScrollIntoView from '@/hooks/useScrollIntoView';
 import styles from '@/styles/pos/OrderCart.module.css';
 import {
@@ -19,47 +20,73 @@ import {
   ShoppingCartOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { Button, DatePicker, Flex, Input, Select, Space } from 'antd';
+import { Button, DatePicker, Flex, Input, Select } from 'antd';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// Initial pending order tab
 const PENDING_TAB = { id: 0, label: 'Đơn chờ', hasItems: false };
 const defaultValue = dayjs();
 
+interface TabInfo {
+  id: number;
+  label: string;
+  hasItems: boolean;
+  subBillNumber: number;
+}
+
 export default function OrderCart() {
-  const { orderItems, updateQty, removeItem } = useOrderContext();
-  const [tabs, setTabs] = useState([PENDING_TAB]);
+  const { orderItems, updateQty, removeItem, setActiveTabId, activeTabId } =
+    useOrderContext();
+
+  const [tabs, setTabs] = useState<TabInfo[]>([
+    { ...PENDING_TAB, subBillNumber: 0 },
+  ]);
   const [activeTab, setActiveTab] = useState(0);
-  const [orderCounter, setOrderCounter] = useState(1);
+
   const { itemRefs, scrollToView } = useScrollIntoView<
     HTMLButtonElement | HTMLAnchorElement
   >();
+  const scrollRef = useDragScroll<HTMLDivElement>();
 
-  const displayedTabs = useMemo(() => {
-    return tabs.map((tab) => {
-      if (tab.id === activeTab) {
-        if (tab.hasItems && orderItems.length === 0) {
-          return { ...tab, label: 'Đơn chờ', hasItems: false };
-        }
-        if (!tab.hasItems && orderItems.length > 0) {
-          return { ...tab, label: `Đơn 1.${orderCounter}`, hasItems: true };
-        }
-      }
-      return tab;
-    });
-  }, [tabs, activeTab, orderItems.length, orderCounter]);
+  useEffect(() => {
+    setActiveTabId(activeTab);
+  }, [activeTab, setActiveTabId]);
 
-  const currentDisplayedTab = displayedTabs.find((t) => t.id === activeTab);
   const currentTab = tabs.find((t) => t.id === activeTab);
-  if (
-    currentDisplayedTab &&
-    currentTab &&
-    currentDisplayedTab.hasItems !== currentTab.hasItems
-  ) {
-    queueMicrotask(() => {
-      setTabs(displayedTabs);
-    });
+
+  if (activeTab === activeTabId && currentTab) {
+    if (!currentTab.hasItems && orderItems.length > 0) {
+      const maxSubBill = Math.max(...tabs.map((t) => t.subBillNumber), 0);
+      const nextSubBillNumber = maxSubBill > 0 ? maxSubBill + 1 : 1;
+
+      setTabs((prev) =>
+        prev.map((tab) =>
+          tab.id === activeTab
+            ? {
+                ...tab,
+                label: `Đơn 1.${nextSubBillNumber}`,
+                hasItems: true,
+                subBillNumber: nextSubBillNumber,
+              }
+            : tab,
+        ),
+      );
+    }
+
+    if (currentTab.hasItems && orderItems.length === 0) {
+      setTabs((prev) =>
+        prev.map((tab) =>
+          tab.id === activeTab
+            ? {
+                ...tab,
+                label: 'Đơn chờ',
+                hasItems: false,
+                subBillNumber: 0,
+              }
+            : tab,
+        ),
+      );
+    }
   }
 
   const subtotal = orderItems.reduce(
@@ -80,101 +107,106 @@ export default function OrderCart() {
     const newId = tabs.length;
     setTabs((prev) => [
       ...prev,
-      { id: newId, label: 'Đơn chờ', hasItems: false },
+      { id: newId, label: 'Đơn chờ', hasItems: false, subBillNumber: 0 },
     ]);
     setActiveTab(newId);
-    setOrderCounter((prev) => prev + 1);
   };
 
   return (
     <div className={styles.container}>
-      {/* 1. Order Tabs */}
-      <div className={`${styles.tabHeader} d-flex align-items-center`}>
-        <div
-          className={`d-flex align-items-center flex-grow-1 ${styles.tabList}`}
-        >
-          {displayedTabs.map((tab) => (
-            <Button
-              ref={(el) => {
-                itemRefs.current[tab.id] = el;
-              }}
-              key={tab.id}
-              className={`${styles.tabButton} ${activeTab === tab.id ? styles.tabActive : ''} py-1`}
-              iconPlacement="end"
-              {...(activeTab === tab.id && {
-                icon: <CloseOutlined style={{ fontSize: 14 }} />,
-              })}
-              onClick={() => {
-                setActiveTab(tab.id);
-                scrollToView(tab.id);
-              }}
-            >
-              <span className="text-md-semibold">{tab.label}</span>
-            </Button>
-          ))}
-        </div>
-        <div className={`${styles.tabActions} d-flex align-items-center`}>
-          <Space className="gap-2">
+      <Flex vertical gap={8}>
+        {/* 1. Order Tabs */}
+        <div className={`${styles.tabHeader} d-flex align-items-center`}>
+          <div
+            ref={scrollRef}
+            className={`d-flex align-items-center flex-grow-1 ${styles.tabList}`}
+          >
+            {tabs.map((tab) => (
+              <Button
+                ref={(el) => {
+                  itemRefs.current[tab.id] = el;
+                }}
+                key={tab.id}
+                className={`${styles.tabButton} ${activeTab === tab.id ? styles.tabActive : ''} py-1`}
+                iconPlacement="end"
+                {...(activeTab === tab.id && {
+                  icon: <CloseOutlined style={{ fontSize: 14 }} />,
+                })}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  scrollToView(tab.id);
+                }}
+              >
+                <span className="text-md-semibold">{tab.label}</span>
+              </Button>
+            ))}
+          </div>
+          <div className={`${styles.tabActions}`}>
             <Button icon={<PlusCircleOutlined />} onClick={createNewOrder} />
             <Button icon={<CaretDownOutlined />} />
             <Button
               icon={<ClockCircleOutlined style={{ color: '#119C72' }} />}
             />
-          </Space>
+          </div>
         </div>
-      </div>
 
-      {/* 2. Toolbar */}
-      <div
-        className={`${styles.toolbar} d-flex align-items-center flex-wrap gap-1`}
-      >
-        <span className={`${styles.toolbarTableName} text-md-semibold`}>
-          Bàn 1
-        </span>
-        <div className="d-flex align-items-center justify-content-end gap-2 flex-grow-1 h-100">
-          <Button
-            icon={<UsergroupAddOutlined />}
-            className="text-md-regular px-2"
-          >
-            99
-          </Button>
-          <DatePicker
-            defaultValue={defaultValue}
-            showTime
-            className={styles.toolbarTableDatepicker}
-            format="DD/MM/YYYY HH:mm"
-            suffixIcon={<CalendarOutlined />}
-            allowClear={false}
-            // variant="borderless"
-          />
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="Tìm khách hàng"
-            suffix={<PlusOutlined />}
-            style={{ flex: 1, borderRadius: '8px' }}
-            className={styles.toolbarTableInput}
-          />
+        {/* 2. Toolbar */}
+        <div className={`${styles.toolbar} gap-1`}>
+          <span className={`${styles.toolbarTableName} text-md-semibold`}>
+            Bàn 1
+          </span>
+          <div className="d-flex align-items-center justify-content-end gap-2 flex-grow-1 h-100">
+            <Button
+              icon={<UsergroupAddOutlined />}
+              className="text-md-regular px-2"
+            >
+              99
+            </Button>
+            <DatePicker
+              defaultValue={defaultValue}
+              showTime
+              className={styles.toolbarTableDatepicker}
+              format="DD/MM/YYYY HH:mm"
+              suffixIcon={<CalendarOutlined />}
+              allowClear={false}
+              // variant="borderless"
+            />
+            <Input
+              prefix={<SearchOutlined />}
+              placeholder="Tìm khách hàng"
+              suffix={<PlusOutlined />}
+              style={{ flex: 1, borderRadius: '8px' }}
+              className={styles.toolbarTableInput}
+            />
+          </div>
         </div>
-      </div>
+      </Flex>
 
       {/* 3. Order List */}
-      <div className={styles.orderList}>
-        {orderItems.map((item) => (
-          <OrderItem
-            key={item.id}
-            id={item.id}
-            name={item.name}
-            qty={item.qty}
-            price={item.price}
-            total={item.price * item.qty}
-            onUpdateQty={updateQty}
-            removeItem={removeItem}
-          />
-        ))}
+      <div
+        className={`${styles.orderList} ${!orderItems?.length ? 'justify-content-center align-items-center ' : ''}`}
+      >
+        {!orderItems?.length ? (
+          <span>Xin vui lòng chọn món</span>
+        ) : (
+          orderItems.map((item) => (
+            <OrderItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              qty={item.qty}
+              price={item.price}
+              total={item.price * item.qty}
+              note={item.note}
+              onUpdateQty={updateQty}
+              removeItem={removeItem}
+            />
+          ))
+        )}
       </div>
 
       {/* 4. Footer */}
-      <div className={styles.footer}>
+      <Flex vertical gap={8}>
         <div className={styles.footerText}>
           <div className={styles.icon}>
             <EditOutlined style={{ fontSize: 16 }} />
@@ -195,15 +227,8 @@ export default function OrderCart() {
               className={styles.footerBtn}
             />
           </div>
-          <div>
-            <Button
-              className="d-flex align-items-center gap-1"
-              style={{
-                backgroundColor: '#2F99E7',
-                color: '#fff',
-                width: '165px',
-              }}
-            >
+          <div className={styles.footerRegularPrice}>
+            <Button>
               Bảng giá thường <CaretDownOutlined />
             </Button>
           </div>
@@ -213,10 +238,12 @@ export default function OrderCart() {
           <span>Khuyến mãi/ Chiết khấu</span>
           <span>{formatNumber(discount)}</span>
         </div>
+
         <div className={styles.footerVat}>
           <span>VAT</span>
           <span>{formatNumber(vat)}</span>
         </div>
+
         <div className={styles.footerTotal}>
           <span>Phải thanh toán</span>
           <span>
@@ -224,13 +251,14 @@ export default function OrderCart() {
             <CaretDownOutlined style={{ fontSize: 16, color: '#5F5A6A' }} />
           </span>
         </div>
+
         <Flex gap={8}>
           <Flex gap={8}>
             <Button
               shape="round"
               size="large"
               block
-              className={styles.footerBtnPayment}
+              className={styles.footerBtnAction}
             >
               Báo bếp
             </Button>
@@ -238,7 +266,7 @@ export default function OrderCart() {
               shape="round"
               size="large"
               block
-              className={styles.footerBtnPayment}
+              className={styles.footerBtnAction}
             >
               Kiểm món
             </Button>
@@ -247,12 +275,12 @@ export default function OrderCart() {
             shape="round"
             size="large"
             block
-            style={{ backgroundColor: '#119C72', color: '#CFFFF0' }}
+            className={styles.footerBtnPayment}
           >
             <ShoppingCartOutlined /> Thanh toán (F4)
           </Button>
         </Flex>
-      </div>
+      </Flex>
     </div>
   );
 }

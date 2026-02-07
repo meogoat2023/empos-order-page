@@ -6,6 +6,7 @@ import TopHeader from '@/components/layout/TopHeader';
 import { useCategoryContext } from '@/contexts/CategoryContext';
 import { useOrderContext } from '@/contexts/OrderContext';
 import styles from '@/styles/pos/ProductGrid.module.css';
+import { Button } from 'antd';
 import Image from 'next/image';
 import { useMemo } from 'react';
 
@@ -13,7 +14,6 @@ export default function ProductGrid() {
   const { addToOrder } = useOrderContext();
   const { activeCategoryId, activeSubCategoryId } = useCategoryContext();
 
-  // Products with category and subcategory (matching menu.ts subcategories)
   const productData = {
     drink: {
       beverage: [
@@ -44,7 +44,6 @@ export default function ProductGrid() {
     },
   };
 
-  // Generate all products with subcategory
   const allProducts = useMemo(() => {
     const categories = ['drink', 'food', 'fast-food'] as const;
     let productId = 1;
@@ -58,24 +57,22 @@ export default function ProductGrid() {
           stock: Math.floor(Math.random() * 200),
           type,
           subCategory,
+          note: 'Ít cơm, sườn nướng cháy cạnh vừa phải, không ngọt, không mặn; bì ít thính; chả trứng cắt mỏng; ',
         })),
       ),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only generate once
+  }, []);
 
-  // Filter products based on selected category and subcategory
   const products = useMemo(() => {
     let filtered = allProducts;
 
-    // Filter by category
     if (activeCategoryId !== 'all') {
       filtered = filtered.filter(
         (product) => product.type === activeCategoryId,
       );
     }
 
-    // Filter by subcategory
     if (activeSubCategoryId !== 'all') {
       filtered = filtered.filter(
         (product) => product.subCategory === activeSubCategoryId,
@@ -91,15 +88,16 @@ export default function ProductGrid() {
       name: product.name,
       price: product.price,
       type: product.type,
+      note: product.note,
     });
   };
 
   return (
     <div className="d-flex flex-column h-100">
-      {/* Header: Tìm kiếm & Filter */}
+      {/* Header */}
       <TopHeader />
 
-      {/* Body: Lưới sản phẩm */}
+      {/* Body */}
       <div className={styles.productCard}>
         {products.map((item) => (
           <div
@@ -114,7 +112,12 @@ export default function ProductGrid() {
                   <AppIcon icon={EmptyImgFood} size={32} />
                 )}
                 {item.type === 'food' && (
-                  <Image src="" alt={item.name} className={styles.cardImg} />
+                  <Image
+                    src="/default.avif"
+                    fill
+                    alt={item.name}
+                    className={styles.cardImg}
+                  />
                 )}
               </div>
 
@@ -132,6 +135,15 @@ export default function ProductGrid() {
             </div>
           </div>
         ))}
+      </div>
+      {/* Footer */}
+      <div className={styles.footer}>
+        <Button shape="round" className="flex-grow-1">
+          Tách bàn
+        </Button>
+        <Button shape="round" className="flex-grow-1">
+          Chuyển bàn
+        </Button>
       </div>
     </div>
   );

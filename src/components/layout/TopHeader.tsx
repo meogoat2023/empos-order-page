@@ -1,6 +1,7 @@
 'use client';
 
 import { useCategoryContext } from '@/contexts/CategoryContext';
+import { useDragScroll } from '@/hooks/useDragScroll';
 import useScrollIntoView from '@/hooks/useScrollIntoView';
 import styles from '@/styles/layout/TopHeader.module.css';
 import { SearchOutlined } from '@ant-design/icons';
@@ -8,6 +9,7 @@ import { Divider } from 'antd';
 import React from 'react';
 
 export default function TopHeader() {
+  const scrollRef = useDragScroll<HTMLDivElement>();
   const {
     subCategories,
     activeSubCategoryId,
@@ -34,9 +36,7 @@ export default function TopHeader() {
       <Divider orientation="vertical" className="absolute h-100" />
 
       {/* Sub category */}
-      <div
-        className={`${styles.disableScroll} d-flex gap-2 overflow-auto w-50 pe-3`}
-      >
+      <div className={`${styles.subCategory} w-50 pe-3`} ref={scrollRef}>
         {subCategories.map((item, index) => (
           <span
             ref={(el) => {

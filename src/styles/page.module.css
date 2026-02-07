@@ -1,0 +1,27 @@
+.productArea {
+  flex: 1;
+  min-width: 0;
+}
+
+.cartArea {
+  width: 548px;
+  height: 100%;
+}
+
+@media (max-width: 1440px) {
+  .cartArea {
+    width: 480px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .cartArea {
+    width: 420px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cartArea {
+    width: 506px;
+  }
+}

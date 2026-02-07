@@ -13,6 +13,11 @@ body {
   background: rgb(var(--background-rgb));
   line-height: var(--bs-body-line-height);
   font-family: var(--font-sf);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
@@ -80,4 +85,8 @@ input::placeholder {
   -webkit-box-orient: vertical;
   overflow: hidden;
   -webkit-line-clamp: var(--line, 2);
+}
+
+.scrollbar-width-none {
+  scrollbar-width: none;
 }
