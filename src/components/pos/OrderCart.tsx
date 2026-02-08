@@ -252,22 +252,12 @@ export default function OrderCart() {
           </span>
         </div>
 
-        <Flex gap={8}>
-          <Flex gap={8}>
-            <Button
-              shape="round"
-              size="large"
-              block
-              className={styles.footerBtnAction}
-            >
+        <Flex gap={8} className={styles.footerBtnGroup}>
+          <Flex gap={8} className={`${styles.footerBtnAction} h-100`}>
+            <Button shape="round" size="large" block>
               Báo bếp
             </Button>
-            <Button
-              shape="round"
-              size="large"
-              block
-              className={styles.footerBtnAction}
-            >
+            <Button shape="round" size="large" block>
               Kiểm món
             </Button>
           </Flex>
@@ -275,7 +265,7 @@ export default function OrderCart() {
             shape="round"
             size="large"
             block
-            className={styles.footerBtnPayment}
+            className={`${styles.footerBtnPayment} h-100`}
           >
             <ShoppingCartOutlined /> Thanh toán (F4)
           </Button>

@@ -97,14 +97,19 @@
 .footer button {
   border-color: #119c72 !important;
   color: #119c72 !important;
+  height: 44px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1199px) {
   .productCard {
     padding: 8px 8px 76px;
   }
 
   .footer {
-    height: 64px;
+    height: 52px;
+  }
+
+  .footer button {
+    height: 40px;
   }
 }
