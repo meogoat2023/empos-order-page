@@ -1,5 +1,4 @@
-/* Import Bootstrap CSS */
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "tailwindcss";
 
 :root {
   --foreground-rgb: 0, 0, 0;

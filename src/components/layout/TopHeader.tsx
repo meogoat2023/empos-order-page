@@ -1,12 +1,12 @@
 'use client';
 
-import { useCategoryContext } from '@/contexts/CategoryContext';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import useScrollIntoView from '@/hooks/useScrollIntoView';
-import styles from '@/styles/layout/TopHeader.module.css';
+import { useCategoryStore } from '@/stores/useCategoryStore';
 import { SearchOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function TopHeader() {
   const scrollRef = useDragScroll<HTMLDivElement>();
@@ -15,7 +15,14 @@ export default function TopHeader() {
     activeSubCategoryId,
     setActiveSubCategoryId,
     activeCategoryId,
-  } = useCategoryContext();
+  } = useCategoryStore(
+    useShallow((state) => ({
+      subCategories: state.subCategories,
+      activeSubCategoryId: state.activeSubCategoryId,
+      setActiveSubCategoryId: state.setActiveSubCategoryId,
+      activeCategoryId: state.activeCategoryId,
+    })),
+  );
   const { itemRefs, scrollToView } = useScrollIntoView<HTMLSpanElement>();
 
   React.useEffect(() => {
@@ -24,19 +31,20 @@ export default function TopHeader() {
   }, [activeCategoryId, scrollToView, setActiveSubCategoryId]);
 
   return (
-    <div
-      className={`${styles.topHeader} bg-white border-bottom d-flex align-items-center gap-2`}
-    >
+    <div className="h-[56px] xl:h-[48px] flex-none bg-white border-b flex items-center gap-2">
       {/* Search */}
-      <div className={`d-flex w-50 px-3 gap-2`}>
+      <div className={`flex w-1/2 px-3 gap-2`}>
         <SearchOutlined style={{ fontSize: '16px', padding: '4px' }} />
         <input placeholder="Tìm kiếm món" className="title-sm-medium" />
       </div>
 
-      <Divider orientation="vertical" className="absolute h-100" />
+      <Divider orientation="vertical" className="absolute h-full" />
 
       {/* Sub category */}
-      <div className={`${styles.subCategory} w-50 pe-3`} ref={scrollRef}>
+      <div
+        className="flex gap-[8px] overflow-x-auto scrollbar-width-none touch-pan-x cursor-grab w-1/2 pr-3"
+        ref={scrollRef}
+      >
         {subCategories.map((item, index) => (
           <span
             ref={(el) => {
@@ -47,7 +55,15 @@ export default function TopHeader() {
               setActiveSubCategoryId(item.id.toString());
               scrollToView(index);
             }}
-            className={`${styles.subItem} ${item.id.toString() === activeSubCategoryId ? styles.active : styles.inactive} d-flex align-items-center justify-content-center text-md-semibold`}
+            className={`
+              w-fit cursor-pointer pointer-events-auto transition-all duration-200 rounded-md whitespace-nowrap h-[36px] px-[14px] py-[4px]
+              flex items-center justify-center text-md-semibold border
+              ${
+                item.id.toString() === activeSubCategoryId
+                  ? 'text-(--color-primary) border-(--color-primary) bg-(--bg-sematic-success-subtle)'
+                  : 'text-(--neutral-secondary) border-(--neutral-inverse-tertiary) hover:bg-(--bg-sematic-success-subtle) hover:border-(--color-primary)'
+              }
+            `}
           >
             {item.name}
           </span>

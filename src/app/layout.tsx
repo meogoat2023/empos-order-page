@@ -3,7 +3,7 @@ import '@/styles/variables.css';
 import { ConfigProvider } from 'antd';
 import viVN from 'antd/locale/vi_VN';
 import type { Metadata } from 'next';
-import { sfPro } from './fonts';
+import { sfPro } from '@/app/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {

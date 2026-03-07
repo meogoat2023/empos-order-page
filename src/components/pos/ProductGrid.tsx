@@ -3,16 +3,18 @@
 import { AppIcon } from '@/components/common/AppIcon';
 import EmptyImgFood from '@/components/icons/empty-img-food';
 import TopHeader from '@/components/layout/TopHeader';
-import { useCategoryContext } from '@/contexts/CategoryContext';
-import { useOrderContext } from '@/contexts/OrderContext';
-import styles from '@/styles/pos/ProductGrid.module.css';
+import { useCategoryStore } from '@/stores/useCategoryStore';
+import { useOrderStore } from '@/stores/useOrderStore';
 import { Button } from 'antd';
 import Image from 'next/image';
 import { useMemo } from 'react';
 
 export default function ProductGrid() {
-  const { addToOrder } = useOrderContext();
-  const { activeCategoryId, activeSubCategoryId } = useCategoryContext();
+  const addToOrder = useOrderStore((state) => state.addToOrder);
+  const activeCategoryId = useCategoryStore((state) => state.activeCategoryId);
+  const activeSubCategoryId = useCategoryStore(
+    (state) => state.activeSubCategoryId,
+  );
 
   const productData = {
     drink: {
@@ -93,21 +95,21 @@ export default function ProductGrid() {
   };
 
   return (
-    <div className="d-flex flex-column h-100">
+    <div className="flex flex-col h-full">
       {/* Header */}
       <TopHeader />
 
       {/* Body */}
-      <div className={styles.productCard}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-y-4 gap-x-2 p-4 pb-[90px] max-h-dvh overflow-y-auto scrollbar-width-none xl:p-[8px_8px_76px]">
         {products.map((item) => (
           <div
             key={item.id}
             onClick={() => handleProductClick(item)}
             style={{ cursor: 'pointer' }}
           >
-            <div className={styles.card}>
+            <div className="rounded-[16px] overflow-hidden h-[176px] relative shadow-[0px_6px_16px_-4px_#0000001a] cursor-pointer">
               {/* Card Header (Image or Icon) */}
-              <div className={styles.cardHeader}>
+              <div className="flex items-center justify-center h-[80px] pb-6 bg-[#119c72] rounded-b-[16px]">
                 {item.type === 'drink' && (
                   <AppIcon icon={EmptyImgFood} size={32} />
                 )}
@@ -116,20 +118,26 @@ export default function ProductGrid() {
                     src="/default.avif"
                     fill
                     alt={item.name}
-                    className={styles.cardImg}
+                    className="object-cover"
                   />
                 )}
               </div>
 
               {/* Card Body */}
-              <div className={styles.cardBody}>
+              <div className="rounded-t-[16px] h-[120px] absolute bottom-0 left-1/2 -translate-x-1/2 w-full bg-white flex flex-col justify-between p-[12px_12px_16px] z-10">
                 {/* Title */}
-                <span className="line-clamp">{item.name}</span>
+                <span className="line-clamp text-[17px] font-medium leading-[22px]">
+                  {item.name}
+                </span>
 
                 {/* Footer: Price & Stock */}
-                <div className={styles.cardBodyPriceStock}>
-                  <span>{item.price.toLocaleString()}</span>
-                  <span className="rounded-circle">{item.stock}</span>
+                <div className="flex justify-between items-center w-full h-[34px]">
+                  <span className="text-[18px] font-semibold leading-[26px] text-[#005695]">
+                    {item.price.toLocaleString()}
+                  </span>
+                  <span className="flex items-center justify-center text-[13px] leading-[18px] h-full w-[36px] rounded-full bg-[#fff7e8] text-[#624200]">
+                    {item.stock}
+                  </span>
                 </div>
               </div>
             </div>
@@ -137,11 +145,17 @@ export default function ProductGrid() {
         ))}
       </div>
       {/* Footer */}
-      <div className={styles.footer}>
-        <Button shape="round" className="flex-grow-1">
+      <div className="flex justify-center items-center gap-2 absolute bottom-0 left-0 w-full h-[76px] z-10 bg-white px-4 xl:h-[52px]">
+        <Button
+          shape="round"
+          className="grow h-[44px] xl:h-[40px] border-[#119c72]! text-[#119c72]!"
+        >
           Tách bàn
         </Button>
-        <Button shape="round" className="flex-grow-1">
+        <Button
+          shape="round"
+          className="grow h-[44px] xl:h-[40px] border-[#119c72]! text-[#119c72]!"
+        >
           Chuyển bàn
         </Button>
       </div>

@@ -32,16 +32,6 @@
   /* Kích thước (Spacing & Layout) */
   --sidebar-width: 112px;
   --header-height: 64px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --margin-b-lg: 12px;
-  --padding-8: 8px;
-  --padding-10: 10px;
-  --padding-16: 16px;
-  --gap-7: 7px;
-  --gap-8: 8px;
-  --gap-16: 16px;
 
   /* Hiệu ứng */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
